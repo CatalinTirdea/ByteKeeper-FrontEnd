@@ -4,10 +4,14 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ProductEditPage from './ProductEditPage';
 
 
 function App() {
   return (
+      <Router>
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -23,7 +27,13 @@ function App() {
           Learn React
         </a>
       </header>
+      <Switch>
+        <Route path="/products/:id/edit" component={ProductEditPage} />
+        {}
+      </Switch>
     </div>
+      </Router>
+
   );
 }
 
