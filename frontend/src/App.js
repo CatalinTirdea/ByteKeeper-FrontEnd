@@ -4,37 +4,90 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import ProductEditPage from './ProductEditPage';
 
 
-function App() {
-  return (
-      <Router>
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <Switch>
-        <Route path="/products/:id/edit" component={ProductEditPage} />
-        {}
-      </Switch>
-    </div>
-      </Router>
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
+const App = ({ productId }) => {
+  const [product, setProduct] = useState({
+    name: '',
+    price: 0,
+    description: ''
+  });
+
+  useEffect(() => {
+
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`/api/products/${productId}`);
+        setProduct(response.data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setProduct(prevProduct => ({
+      ...prevProduct,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      await axios.put(`/api/products/`, product);
+
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
+  };
+
+  return (
+      <div>
+        <h2>Edit Product</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="name">Name:</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value={product.name}
+                onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="price">Price:</label>
+            <input
+                type="number"
+                id="price"
+                name="price"
+                value={product.price}
+                onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="description">Description:</label>
+            <textarea
+                id="description"
+                name="description"
+                value={product.description}
+                onChange={handleChange}
+            ></textarea>
+          </div>
+          <button type="submit">Update Product</button>
+        </form>
+      </div>
   );
-}
+};
 
 export default App;
+
