@@ -27,6 +27,7 @@ export default function InventoryForm() {
 
     return (
         <>
+            <h2>Add Inventory</h2>
             <Box
                 sx={{
                     marginTop: 8,

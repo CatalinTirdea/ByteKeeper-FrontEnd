@@ -9,11 +9,11 @@ import '@fontsource/roboto/700.css';
 // import ProductEditPage from './components/Product/ProductEditPage';
 
 
-import {useEffect, useState} from "react";
-import Home from "./components/Home";
-import InventoryForm from "./components/Inventory/InventoryForm";
-import ShowAll from "./components/Inventory/ShowAll";
-import ProductForm from "./components/Product/ProductForm";
+// import {useEffect, useState} from "react";
+// import Home from "./components/Home";
+// import InventoryForm from "./components/Inventory/InventoryForm";
+// import ShowAll from "./components/Inventory/ShowAll";
+// import ProductForm from "./components/Product/ProductForm";
 import React from 'react';
 import {
   BrowserRouter as Router,
