@@ -25,6 +25,7 @@ import Contact from './components/pages/Contact';
 import Product from './components/pages/Product';
 import NoPage from './components/pages/NoPage';
 import Layout from './components/pages/Layout';
+import Inventory from './components/pages/Inventory';
 
 
 
@@ -36,7 +37,8 @@ function App (){
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="product" element={<Product />} />
+        <Route path="/product/:id/" element={<Product />} />
+                <Route path="inventory" element={<Inventory />} />
         <Route path="*" element={<NoPage />} />
       </Route>
     </Routes>

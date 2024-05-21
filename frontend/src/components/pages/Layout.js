@@ -8,7 +8,8 @@ const Layout = () => {
           <ul>
             <li className="logo"><Link to="/">ByteKeeper</Link></li>
             <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/product">Product</Link></li>
+            
+            <li><Link to="/inventory">Inventory</Link></li>
           </ul>
         </nav>
         <div className="container">
