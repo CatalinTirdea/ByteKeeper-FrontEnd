@@ -1,0 +1,92 @@
+/* Inventory.css */
+
+.inventory-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-container h2 {
+    margin-bottom: 20px;
+}
+
+.inventory-list {
+    list-style: none;
+    padding: 0;
+}
+
+.inventory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.inventory-item:hover {
+    background-color: #f0f0f0;
+}
+
+.inventory-details {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-list li {
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+/* Stiluri pentru antet */
+.header {
+    background-color: #1E88E5; /* Albastru deschis */
+    color: #FFF; /* Text alb */
+    padding: 20px;
+    text-align: center;
+    display: flex; /* Flex container */
+    justify-content: center; /* Așezare centrată */
+    flex-direction: column; /* Așezare verticală */
+}
+
+.header-logo {
+    width: 150px; /* Lățimea logo-ului */
+    margin-bottom: 10px; /* Spațiere între logo și titlu */
+}
+
+.header-title {
+    font-family: 'Arial Black', sans-serif; /* Font îngroșat */
+    font-size: 36px; /* Dimensiunea fontului */
+    margin: 0;
+    text-transform: uppercase; /* Text în majuscule */
+    letter-spacing: 2px; /* Spațiere între caractere */
+}
+.content{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    flex-direction: column;
+}

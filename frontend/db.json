@@ -1,0 +1,52 @@
+{
+  "inventories": [
+    {
+      "id": 1,
+      "name": "Electronics Inventory",
+      "products": [
+        {
+          "id": 1,
+          "name": "Laptop",
+          "price": 999.99
+        },
+        {
+          "id": 2,
+          "name": "Smartphone",
+          "price": 499.99
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Food Inventory",
+      "products": [
+        {
+          "id": 3,
+          "name": "Bread",
+          "price": 2.99
+        },
+        {
+          "id": 4,
+          "name": "Milk",
+          "price": 1.99
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Sports Inventory",
+      "products": [
+        {
+          "id": 5,
+          "name": "Basketball",
+          "price": 29.99
+        },
+        {
+          "id": 6,
+          "name": "Soccer Ball",
+          "price": 19.99
+        }
+      ]
+    }
+  ]
+}
