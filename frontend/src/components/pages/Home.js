@@ -8,14 +8,14 @@ const Home = () => {
     useEffect(() => {
       const fetchInventories = async () => {
           try {
-              const response = await fetch('http://localhost:5000/inventories');
+              const response = await fetch('/api/inventories/');
               if (!response.ok) {
                   throw new Error('Failed to fetch inventories');
               }
               const data = await response.json();
               setInventories(data);
           } catch (error) {
-              console.error('Error fetching inventories:', error);
+              console.error('Error fetching inventories', error);
           }
       };
 

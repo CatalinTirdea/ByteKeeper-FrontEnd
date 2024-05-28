@@ -17,7 +17,7 @@ export default function ProductForm() {
     // };
 
     const getCategories = async () => {
-        await fetch('/api/products/getCategories',{
+        await fetch('/api/categories/getCategories',{
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'

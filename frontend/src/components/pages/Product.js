@@ -13,7 +13,7 @@ const Product = () => {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/inventories`);
+                const response = await fetch(`/api/inventories/`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch inventory');
                 }
@@ -34,7 +34,7 @@ const Product = () => {
                 setProductPrice(foundProduct.price);
                 setLoading(false); // Marcam încărcarea ca fiind completă
             } catch (error) {
-                console.error('Error fetching inventory or product:', error);
+                console.error('Error fetching inventory or product', error);
             }
         };
 
@@ -43,7 +43,7 @@ const Product = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/inventories/${inventory.id}/products/${id}`, {
+            const response = await fetch(`/api/products/delete/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
@@ -51,13 +51,13 @@ const Product = () => {
             }
             navigate('/');
         } catch (error) {
-            console.error('Error deleting product:', error);
+            console.error('Error deleting product', error);
         }
     };
 
     const handleEdit = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/inventories/${inventory.id}/products/${id}`, {
+            const response = await fetch(`/api/products/edit/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Product = () => {
             }
             navigate('/');
         } catch (error) {
-            console.error('Error updating product:', error);
+            console.error('Error updating product', error);
         }
     };
 
