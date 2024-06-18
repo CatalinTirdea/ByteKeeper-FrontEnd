@@ -32,6 +32,7 @@ const Layout = () => {
           <li className="logo"><Link to="/">ByteKeeper</Link></li>
           <li><Link to="/contact">Contact</Link></li>
           <li><Link to="/inventory">Inventory</Link></li>
+          <li><Link to="/download">Download</Link></li>
           <li><Link to="/inventory/new">Add Inventory</Link></li>
           <li className="search-bar">
             <input type="text" placeholder="Search" />

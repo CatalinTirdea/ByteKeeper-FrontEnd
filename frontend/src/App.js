@@ -20,6 +20,7 @@ import Inventory from './components/pages/Inventory';
 import InventoryForm from './components/pages/InventoryForm';
 import Login from './components/pages/Login';
 import Callback from './components/pages/Callback';
+import DownloadButton from './components/pages/DownloadButton';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="callback" element={<Callback />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="download" element={<DownloadButton />} />
           <Route path="products/:id/" element={<Product />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="inventory/new" element={<InventoryForm />} />

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Chart } from 'react-google-charts';
 import '../../styles/style.css';
+
 
 const Home = () => {
   const [inventories, setInventories] = useState([]);
@@ -14,11 +16,9 @@ const Home = () => {
     price: ''
   });
   const [showProductForm, setShowProductForm] = useState(false);
+  const [showChart, setShowChart] = useState({});
   const navigate = useNavigate();
-
   const location = useLocation();
-
-  
 
   useEffect(() => {
     // Funcție pentru a extrage parametrii din URL
@@ -120,6 +120,40 @@ const Home = () => {
     }
   };
 
+  const downloadFile = async (id) => {
+    try {
+      const response = await fetch(`api/inventories/download/${id}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'inventory.json'); // Setează numele fișierului
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading the file', error);
+    }
+  };
+
+  const generateChartData = (products) => {
+    const data = [['Product', 'Quantity']];
+    products.forEach(product => {
+      data.push([product.name, product.quantity]);
+    });
+    return data;
+  };
+
+  const toggleChart = (inventoryId) => {
+    setShowChart(prevState => ({
+      ...prevState,
+      [inventoryId]: !prevState[inventoryId]
+    }));
+  };
+
   return (
     <div className="content">
       <header className="header">
@@ -133,13 +167,23 @@ const Home = () => {
               <li key={inventory.id} className="inventory-item">
                 <span onClick={() => handleInventoryClick(inventory)} className='inventory-name'>{inventory.name}</span>
                 <button onClick={() => navigate(`/inventory/edit/${inventory.id}`)}>Edit</button>
+                <button onClick={() => downloadFile(inventory.id)}>Download</button>
+                <button onClick={() => toggleChart(inventory.id)}>View Chart</button>
+                {showChart[inventory.id] && (
+                  <Chart
+                    chartType="PieChart"
+                    data={generateChartData(inventory.products)}
+                    options={{ title: 'Product Distribution' }}
+                    width="400px"
+                    height="300px"
+                  />
+                )}
               </li>
             ))}
           </ul>
           <button onClick={() => navigate('/inventory/new')}>Add New Inventory</button>
         </div>
         <div className="products">
-          
           <h2>Products</h2>
           {selectedInventory ? (
             <>
