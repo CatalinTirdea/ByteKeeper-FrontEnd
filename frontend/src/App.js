@@ -1,5 +1,5 @@
-import './App.css';
-import './style.css';  
+import './styles/App.css';
+import './styles/style.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -18,13 +18,18 @@ import NoPage from './components/pages/NoPage';
 import Layout from './components/pages/Layout';
 import Inventory from './components/pages/Inventory';
 import InventoryForm from './components/pages/InventoryForm';
+import Login from './components/pages/Login';
+import Callback from './components/pages/Callback';
 
 function App() {
   return (
     <Router>
       <Routes>
+        
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="callback" element={<Callback />} />
           <Route path="contact" element={<Contact />} />
           <Route path="products/:id/" element={<Product />} />
           <Route path="inventory" element={<Inventory />} />
@@ -35,6 +40,6 @@ function App() {
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

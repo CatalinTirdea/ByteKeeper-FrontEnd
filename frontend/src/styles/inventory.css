@@ -16,6 +16,10 @@
 .inventory-list {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .inventory-item {
@@ -25,10 +29,46 @@
     padding: 10px;
     border-bottom: 1px solid #ccc;
     cursor: pointer;
+    flex-direction: column;
+    gap: 10px;
 }
 
+
+.inventories{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-direction: column;
+
+}
+.inventory-name{
+    font-size: 20px;
+    padding: 10px;
+    border: 1px solid black;
+    width: 100%;
+    text-align: center;
+}
+
+@keyframes nameAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.inventory-name:hover {
+    animation: nameAnimation 0.5s ease-in-out ;
+    background-color: #f0f0f0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
 .inventory-item:hover {
     background-color: #f0f0f0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .inventory-details {
@@ -66,6 +106,7 @@ button:hover {
     background-color: #1E88E5; /* Albastru deschis */
     color: #FFF; /* Text alb */
     padding: 20px;
+    
     text-align: center;
     display: flex; /* Flex container */
     justify-content: center; /* Așezare centrată */

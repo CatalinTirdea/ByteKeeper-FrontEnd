@@ -1,0 +1,40 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    vertical-align: middle;
+  }
+  
+  li {
+    margin-right: 20px;
+  }
+  
+  .logo {
+    margin-right: auto;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-bar input {
+    margin:0;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .login {
+    margin-left: auto;
+  }
+  

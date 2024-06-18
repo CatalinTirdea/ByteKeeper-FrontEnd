@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../../style.css';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import '../../styles/style.css';
 
 const Home = () => {
   const [inventories, setInventories] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: '',
     quantity: '',
@@ -14,6 +15,30 @@ const Home = () => {
   });
   const [showProductForm, setShowProductForm] = useState(false);
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  
+
+  useEffect(() => {
+    // Funcție pentru a extrage parametrii din URL
+    const extractParamsFromUrl = () => {
+      const urlParams = new URLSearchParams(location.search);
+      const accessToken = urlParams.get('access_token');
+      const idToken = urlParams.get('id_token');
+      return { accessToken, idToken };
+    };
+
+    // Extrage token-urile din URL
+    const { accessToken, idToken } = extractParamsFromUrl();
+
+    // Dacă există token-uri în URL, le stochează în localStorage și navighează către /
+    if (accessToken && idToken) {
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('id_token', idToken);
+      navigate('/');
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     const fetchInventories = async () => {
@@ -30,6 +55,23 @@ const Home = () => {
     };
 
     fetchInventories();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories/getCategories');
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories', error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const handleInventoryClick = (inventory) => {
@@ -89,7 +131,7 @@ const Home = () => {
           <ul className="inventory-list">
             {inventories.map(inventory => (
               <li key={inventory.id} className="inventory-item">
-                <span onClick={() => handleInventoryClick(inventory)}>{inventory.name}</span>
+                <span onClick={() => handleInventoryClick(inventory)} className='inventory-name'>{inventory.name}</span>
                 <button onClick={() => navigate(`/inventory/edit/${inventory.id}`)}>Edit</button>
               </li>
             ))}
@@ -97,9 +139,11 @@ const Home = () => {
           <button onClick={() => navigate('/inventory/new')}>Add New Inventory</button>
         </div>
         <div className="products">
+          
           <h2>Products</h2>
           {selectedInventory ? (
             <>
+              <h1>{selectedInventory.name} Inventory</h1>
               <ul className="products-list">
                 {selectedInventory.products.map(product => (
                   <li key={product.id}>
@@ -122,8 +166,15 @@ const Home = () => {
                       <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} required />
                     </label>
                     <label>
-                      Category ID:
-                      <input type="text" name="category_id" value={newProduct.category_id} onChange={handleProductChange} required />
+                      Category:
+                      <select name="category_id" value={newProduct.category_id} onChange={handleProductChange} required>
+                        <option value="" disabled>Select a category</option>
+                        {categories.map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
                     </label>
                     <label>
                       Price:

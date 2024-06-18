@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
-import '../../inventory.css';
+import '../../styles/inventory.css';
 
 const Inventory = () => {
     const [inventories, setInventories] = useState([]);
