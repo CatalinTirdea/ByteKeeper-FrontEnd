@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 const InventoryForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [inventoryItem, setInventoryItem] = useState({ name: '' });
+  const [inventoryItem, setInventoryItem] = useState({ name: '', visibility: 'private' });
 
   useEffect(() => {
     if (id) {
@@ -52,7 +52,14 @@ const InventoryForm = () => {
       <form onSubmit={handleSubmit}>
         <label>
           Name:
-          <input type="text" name="name" value={inventoryItem.name} onChange={handleChange} required />
+          <input type="text" name="name" value={inventoryItem.name} onChange={handleChange} required/>
+        </label>
+        <label>
+          Visibility:
+          <select name="visibility" value={inventoryItem.visibility} onChange={handleChange} required>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
         </label>
         <button type="submit">Save</button>
       </form>
