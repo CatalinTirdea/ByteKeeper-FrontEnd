@@ -9,7 +9,8 @@ export default function ProductForm() {
     const [formData, setFormData] = useState({
         "name": "",
         "quantity": 0,
-        "categoryId": 1
+        "categoryId": 1,
+        "price": 0.0
     })
 
     // const handleChange = (e) => {
@@ -79,6 +80,17 @@ export default function ProductForm() {
                                 id="quantity"
                                 sx={{width: '320px'}}
                                 onChange={(e) => {setFormData({ ...formData, quantity: parseInt(e.target.value)})}}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Price"
+                                name="price"
+                                required
+                                fullWidth
+                                id="price"
+                                sx={{width: '320px'}}
+                                onChange={(e) => {setFormData({ ...formData, price: parseFloat(e.target.value)})}}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>

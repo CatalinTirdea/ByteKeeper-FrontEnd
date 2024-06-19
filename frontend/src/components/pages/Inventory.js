@@ -17,6 +17,7 @@ const Inventory = () => {
                 }
                 const data = await response.json();
                 setInventories(data);
+                console.log(data);
             } catch (error) {
                 console.error('Error fetching inventories', error);
             }
