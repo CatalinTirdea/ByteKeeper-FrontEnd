@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Chart } from 'react-google-charts';
 import '../../styles/style.css';
 
-
 const Home = () => {
   const [inventories, setInventories] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState(null);
@@ -11,8 +10,8 @@ const Home = () => {
   const [newProduct, setNewProduct] = useState({
     name: '',
     quantity: '',
-    category_id: '',
-    inventory_id: '',
+    categoryId: '',  // Schimbat din category_id
+    inventoryId: '',  // Schimbat din inventory_id
     price: ''
   });
   const [showProductForm, setShowProductForm] = useState(false);
@@ -21,7 +20,6 @@ const Home = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Funcție pentru a extrage parametrii din URL
     const extractParamsFromUrl = () => {
       const urlParams = new URLSearchParams(location.search);
       const accessToken = urlParams.get('access_token');
@@ -29,10 +27,8 @@ const Home = () => {
       return { accessToken, idToken };
     };
 
-    // Extrage token-urile din URL
     const { accessToken, idToken } = extractParamsFromUrl();
 
-    // Dacă există token-uri în URL, le stochează în localStorage și navighează către /
     if (accessToken && idToken) {
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('id_token', idToken);
@@ -78,7 +74,7 @@ const Home = () => {
     setSelectedInventory(inventory);
     setNewProduct(prevState => ({
       ...prevState,
-      inventory_id: inventory.id
+      inventoryId: inventory.id  // Schimbat din inventory_id
     }));
   };
 
@@ -86,12 +82,13 @@ const Home = () => {
     const { name, value } = e.target;
     setNewProduct(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: name === 'quantity' || name === 'categoryId' ? parseInt(value, 10) : name === 'price' ? parseFloat(value) : value
     }));
   };
 
   const handleProductSubmit = async (e) => {
     e.preventDefault();
+    console.log('newProduct:', newProduct);  // Adaugă această linie pentru a vedea datele trimise
     try {
       const response = await fetch('/api/products/add', {
         method: 'POST',
@@ -105,12 +102,11 @@ const Home = () => {
         setNewProduct({
           name: '',
           quantity: '',
-          category_id: '',
-          inventory_id: selectedInventory.id,
+          categoryId: '',  // Schimbat din category_id
+          inventoryId: selectedInventory.id,  // Schimbat din inventory_id
           price: ''
         });
         setShowProductForm(false);
-        // Optionally, refresh inventory or product list
       } else {
         alert('Failed to add product');
       }
@@ -211,7 +207,7 @@ const Home = () => {
                     </label>
                     <label>
                       Category:
-                      <select name="category_id" value={newProduct.category_id} onChange={handleProductChange} required>
+                      <select name="categoryId" value={newProduct.categoryId} onChange={handleProductChange} required>
                         <option value="" disabled>Select a category</option>
                         {categories.map(category => (
                           <option key={category.id} value={category.id}>
