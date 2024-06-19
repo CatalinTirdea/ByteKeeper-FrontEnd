@@ -10,6 +10,7 @@ const Layout = () => {
     navigate('/login'); // Navighează utilizatorul către pagina de login după logout
   };
 
+
   const renderLoginLogout = () => {
     const accessToken = localStorage.getItem('access_token');
     const idToken = localStorage.getItem('id_token');

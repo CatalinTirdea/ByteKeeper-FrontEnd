@@ -1,27 +1,75 @@
-import React from 'react';
-import '../../styles/login.css'; // Asigură-te că importi fișierul CSS
-import googleLogo from '../../resources/google-logo.png'; // Importă imaginea
+import React, { useState } from 'react';
+import '../../styles/login.css';
 
-const Login = () => {
-  const googleLogin = () => {
-    const clientId = '140352902475-5hgpbh9obko5f7fd5h51sebbo830olg4.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/oauth2/callback';
-    const scope = 'profile email';
-    const responseType = 'code';
+const Auth = () => {
+    const [isSignup, setIsSignup] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;
-    window.location.href = url;
-  };
+    const toggleSignup = () => {
+        setIsSignup(!isSignup);
+    };
 
-  return (
-    <div className="login-container">
-      <h1>Login</h1>
-      <p>Sign in with your Google account to access the application.</p>
-      <button className="login-button" onClick={googleLogin}>
-        <img src={googleLogo} alt="Google Logo" className="google-logo" /> Login with Google
-      </button>
-    </div>
-  );
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        console.log('Login:', { email, password });
+    };
+
+    const handleSignup = (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+
+        console.log('Signup:', { email, password });
+    };
+
+    return (
+        <div className="auth-container">
+            <h1>{isSignup ? 'Sign Up' : 'Login'}</h1>
+            <form onSubmit={isSignup ? handleSignup : handleLogin}>
+                <div className="form-group">
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                {isSignup && (
+                    <div className="form-group">
+                        <label>Confirm Password:</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                )}
+                <button type="submit" className="auth-button">
+                    {isSignup ? 'Sign Up' : 'Login'}
+                </button>
+            </form>
+            <p onClick={toggleSignup} className="toggle-auth">
+                {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+            </p>
+        </div>
+    );
 };
 
-export default Login;
+export default Auth;
+
