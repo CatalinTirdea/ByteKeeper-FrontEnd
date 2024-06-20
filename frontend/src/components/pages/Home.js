@@ -20,6 +20,41 @@ const Home = () => {
   const [editName, setEditName] = useState('');
   const [editVisibility, setEditVisibility] = useState('public'); // Presupunem că "public" este valoarea implicită pentru vizibilitate
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchInventories = async () => {
+        try {
+            const response = await fetch('/api/inventories/');
+            if (!response.ok) {
+                throw new Error('Failed to fetch inventories');
+            }
+            const data = await response.json();
+            setInventories(data);
+        } catch (error) {
+            console.error('Error fetching inventories', error);
+        }
+    };
+
+    fetchInventories();
+}, []);
+
+const handleDeleteInventory = async (id) => {
+    try {
+        const response = await fetch(`/api/inventories/delete/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert('Inventory deleted successfully');
+            // Poți reîncărca lista de inventare după ștergere sau să gestionezi altfel necesarul
+            const updatedInventories = inventories.filter(inv => inv.id !== id);
+            setInventories(updatedInventories);
+        } else {
+            alert('Failed to delete inventory');
+        }
+    } catch (error) {
+        console.error('Error deleting inventory:', error);
+        alert('Error deleting inventory');
+    }
+};
 
   useEffect(() => {
     const fetchInventories = async () => {
@@ -205,6 +240,7 @@ const Home = () => {
                 <button onClick={() => activateEditMode(inventory)}>Edit</button>
                 <button onClick={() => downloadFile(inventory.id)}>Download</button>
                 <button onClick={() => toggleChart(inventory.id)}>View Chart</button>
+                <button onClick={() => handleDeleteInventory(inventory.id)}>Delete</button>
                 {showChart[inventory.id] && (
                   <Chart
                     chartType="PieChart"

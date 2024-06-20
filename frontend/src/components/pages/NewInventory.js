@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const NewInventory = () => {
   const [name, setName] = useState('');
   const [visibility, setVisibility] = useState('public'); // Valoarea implicită pentru vizibilitate
+  const userId = parseInt(sessionStorage.getItem('id'), 10); // Convertim id-ul din sessionStorage la întreg
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -18,8 +19,9 @@ const NewInventory = () => {
     const newInventory = {
       name: name,
       visibility: visibility,
-      userId: 1, // Aici ar trebui să fie id-ul utilizatorului autentificat, sau poți ajusta cum consideri necesar
+      userId: userId // Transmitem userId-ul ca număr întreg
     };
+    console.log(newInventory);
 
     try {
       const response = await fetch('/api/inventories/add', {

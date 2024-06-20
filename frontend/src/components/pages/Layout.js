@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import '../../styles/layout.css';
+
 const Layout = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    const userEmailFromStorage = sessionStorage.getItem('mail');
+    if (userEmailFromStorage) {
+      setUserEmail(userEmailFromStorage);
+    }
+  }, []);
 
   const handleSearch = () => {
     if (searchTerm.trim() !== '') {
@@ -18,6 +27,14 @@ const Layout = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Ștergere email din sessionStorage și resetare state
+    sessionStorage.removeItem('mail');
+    sessionStorage.removeItem('id');
+    setUserEmail('');
+    // Redirecționare către pagina de login sau altă destinație
+    navigate('/login'); // Sau orice altă destinație dorită pentru logout
+  };
 
   return (
     <>
@@ -25,12 +42,8 @@ const Layout = () => {
         <ul>
           <li className="logo"><Link to="/">ByteKeeper</Link></li>
           <li><Link to="/contact">Contact</Link></li>
-          
           <li><Link to="/inventory">Inventory</Link></li>
-          <li><Link to="/download">Download</Link></li>
           <li><Link to="/inventory/new">Add Inventory</Link></li>
-         
-          <li><Link to='/contact'>Contact</Link></li>
           <li className='search-bar'>
             <input
               type="text"
@@ -43,8 +56,17 @@ const Layout = () => {
           </li>
         </ul>
         <ul>
-        <li><Link to= '/signup'>SignUp</Link></li>
-         <li><Link to='/login'>Login</Link></li>
+          {userEmail ? (
+            <>
+              <li>{userEmail}</li>
+              <li><button onClick={handleLogout}>Logout</button></li>
+            </>
+          ) : (
+            <>
+              <li><Link to='/signup'>SignUp</Link></li>
+              <li><Link to='/login'>Login</Link></li>
+            </>
+          )}
         </ul>
       </nav>
       <div className="container">

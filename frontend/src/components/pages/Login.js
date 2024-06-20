@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import '../../styles/login.css'; // Fișierul CSS pentru stilizare
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -39,8 +40,11 @@ const Login = () => {
             }
 
             // Răspunsul de la server
-            const data = await response;
+            const data = await response.json();
             console.log('Răspuns de la backend:', data);
+            sessionStorage.setItem('mail', mail);
+            sessionStorage.setItem('id', data);
+            navigate('/');
 
             // Aici poți gestiona răspunsul de la backend (token de autentificare, redirecționare, etc.)
         } catch (error) {
