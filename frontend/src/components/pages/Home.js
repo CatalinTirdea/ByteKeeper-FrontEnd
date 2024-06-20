@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Chart } from 'react-google-charts';
 import '../../styles/style.css';
 
@@ -16,25 +16,10 @@ const Home = () => {
   });
   const [showProductForm, setShowProductForm] = useState(false);
   const [showChart, setShowChart] = useState({});
+  const [editMode, setEditMode] = useState(false); // Starea pentru modul de editare
+  const [editName, setEditName] = useState('');
+  const [editVisibility, setEditVisibility] = useState('public'); // Presupunem că "public" este valoarea implicită pentru vizibilitate
   const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const extractParamsFromUrl = () => {
-      const urlParams = new URLSearchParams(location.search);
-      const accessToken = urlParams.get('access_token');
-      const idToken = urlParams.get('id_token');
-      return { accessToken, idToken };
-    };
-
-    const { accessToken, idToken } = extractParamsFromUrl();
-
-    if (accessToken && idToken) {
-      localStorage.setItem('access_token', accessToken);
-      localStorage.setItem('id_token', idToken);
-      navigate('/');
-    }
-  }, [location, navigate]);
 
   useEffect(() => {
     const fetchInventories = async () => {
@@ -88,7 +73,7 @@ const Home = () => {
 
   const handleProductSubmit = async (e) => {
     e.preventDefault();
-    console.log('newProduct:', newProduct); 
+    console.log('newProduct:', newProduct);
     try {
       const response = await fetch('/api/products/add', {
         method: 'POST',
@@ -143,7 +128,7 @@ const Home = () => {
     });
     return data;
   };
-  
+
 
   const calculateTotalPrice = (products) => {
     let totalPrice = 0;
@@ -160,6 +145,51 @@ const Home = () => {
     }));
   };
 
+  // Funcție pentru a activa modul de editare
+  const activateEditMode = (inventory) => {
+    setEditMode(true);
+    setEditName(inventory.name);
+    setEditVisibility(inventory.visibility);
+    setSelectedInventory(inventory); // Setăm și inventarul selectat
+  };
+
+  // Funcție pentru a salva modificările
+  const saveChanges = async () => {
+    console.log("Saving changes");
+    
+    const updatedInventory = {
+      id: selectedInventory.id,
+      name: editName,
+      visibility: editVisibility
+    };
+    
+    console.log("Updated Inventory:", updatedInventory);
+  
+    try {
+      const response = await fetch(`/api/inventories/edit/${selectedInventory.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedInventory)
+      });
+      
+      console.log("Response status:", response.status);
+      
+      if (response.ok) {
+        alert('Inventory updated successfully');
+        setEditMode(false); // Ieșim din modul de editare
+        // Poți adăuga aici o logică pentru reîncărcarea inventarului sau alte acțiuni necesare
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to update inventory:', errorData);
+        alert('Failed to update inventory');
+      }
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+      alert('Error updating inventory');
+    }
+  };
   return (
     <div className="content">
       <header className="header">
@@ -172,7 +202,7 @@ const Home = () => {
             {inventories.map(inventory => (
               <li key={inventory.id} className="inventory-item">
                 <span onClick={() => handleInventoryClick(inventory)} className='inventory-name'>{inventory.name}</span>
-                <button onClick={() => navigate(`/inventory/edit/${inventory.id}`)}>Edit</button>
+                <button onClick={() => activateEditMode(inventory)}>Edit</button>
                 <button onClick={() => downloadFile(inventory.id)}>Download</button>
                 <button onClick={() => toggleChart(inventory.id)}>View Chart</button>
                 {showChart[inventory.id] && (
@@ -193,47 +223,79 @@ const Home = () => {
           <h2>Products</h2>
           {selectedInventory ? (
             <>
-              <h1>{selectedInventory.name} Inventory</h1>
-              <p>Total Value: ${calculateTotalPrice(selectedInventory.products)}</p>
-              <ul className="products-list">
-                {selectedInventory.products.map(product => (
-                  <li key={product.id}>
-                    {product.name} - ${product.price} x {product.quantity} = ${(product.price * product.quantity).toFixed(2)}
-                  </li>
-                ))}
-              </ul>
-              {!showProductForm ? (
-                <button onClick={() => setShowProductForm(true)}>Add New Product</button>
-              ) : (
+              {editMode ? (
                 <>
-                  <h3>Add Product</h3>
-                  <form onSubmit={handleProductSubmit}>
+                  <h1>Edit Inventory</h1>
+                  <form onSubmit={saveChanges}>
                     <label>
                       Name:
-                      <input type="text" name="name" value={newProduct.name} onChange={handleProductChange} required />
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        required
+                      />
                     </label>
                     <label>
-                      Quantity:
-                      <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} required />
-                    </label>
-                    <label>
-                      Category:
-                      <select name="categoryId" value={newProduct.categoryId} onChange={handleProductChange} required>
-                        <option value="" disabled>Select a category</option>
-                        {categories.map(category => (
-                          <option key={category.id} value={category.id}>
-                            {category.name}
-                          </option>
-                        ))}
+                      Visibility:
+                      <select
+                        value={editVisibility}
+                        onChange={(e) => setEditVisibility(e.target.value)}
+                        required
+                      >
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
                       </select>
                     </label>
-                    <label>
-                      Price:
-                      <input type="number" step="0.01" name="price" value={newProduct.price} onChange={handleProductChange} required />
-                    </label>
-                    <button type="submit">Add Product</button>
-                    <button type="button" onClick={() => setShowProductForm(false)}>Cancel</button>
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
                   </form>
+                </>
+              ) : (
+                <>
+                  <h1>{selectedInventory.name} Inventory</h1>
+                  <p>Total Value: ${calculateTotalPrice(selectedInventory.products)}</p>
+                  <ul className="products-list">
+                    {selectedInventory.products.map(product => (
+                      <li key={product.id}>
+                        {product.name} - ${product.price} x {product.quantity} = ${(product.price * product.quantity).toFixed(2)}
+                      </li>
+                    ))}
+                  </ul>
+                  {!showProductForm ? (
+                    <button onClick={() => setShowProductForm(true)}>Add New Product</button>
+                  ) : (
+                    <>
+                      <h3>Add Product</h3>
+                      <form onSubmit={handleProductSubmit}>
+                        <label>
+                          Name:
+                          <input type="text" name="name" value={newProduct.name} onChange={handleProductChange} required />
+                        </label>
+                        <label>
+                          Quantity:
+                          <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} required />
+                        </label>
+                        <label>
+                          Category:
+                          <select name="categoryId" value={newProduct.categoryId} onChange={handleProductChange} required>
+                            <option value="" disabled>Select a category</option>
+                            {categories.map(category => (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          Price:
+                          <input type="number" step="0.01" name="price" value={newProduct.price} onChange={handleProductChange} required />
+                        </label>
+                        <button type="submit">Add Product</button>
+                        <button type="button" onClick={() => setShowProductForm(false)}>Cancel</button>
+                      </form>
+                    </>
+                  )}
                 </>
               )}
             </>

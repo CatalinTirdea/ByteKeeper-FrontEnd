@@ -21,19 +21,36 @@ const Product = () => {
                 }
                 const data = await response.json();
                 console.log(data);
+
+                if (!data) {
+                    throw new Error('Product not found');
+                }
+
                 setProduct(data);
                 setProductName(data.name);
                 setProductQuantity(data.quantity);
                 setProductPrice(data.price);
                 setCategoryId(data.category ? data.category.id : null);
-                setInventoryId(data.inventory ? data.inventory.id : null);
+
+                // Verificați dacă există inventory și setați inventoryId corespunzător
+                if (data.inventory) {
+                    setInventoryId(data.inventory.id);
+                } else {
+                    // Dacă nu există inventory, setați inventoryId pe null sau altă valoare corespunzătoare
+                    setInventoryId(data.inventoryId); // sau altceva, în funcție de necesități
+                }
+
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching product', error);
+                setLoading(false);
             }
         };
 
-        fetchProduct();
+        if (id) {
+            fetchProduct();
+        }
+
     }, [id]);
 
     const handleDelete = async () => {
@@ -52,7 +69,6 @@ const Product = () => {
 
     const handleEdit = async () => {
         try {
-            console.log("name:"+ productName +  "quantity:"+ productQuantity + "price:"+ productPrice  + "categoryId:" + categoryId + "InventoryId" + inventoryId)
             const response = await fetch(`/api/products/edit/${id}`, {
                 method: 'PUT',
                 headers: {

@@ -14,7 +14,10 @@ import InventoryForm from './components/pages/InventoryForm';
 import Login from './components/pages/Login';
 import Callback from './components/pages/Callback';
 import DownloadButton from './components/pages/DownloadButton';
-import InventoryDetails from './components/pages/InventoryDetails'; // Importăm noua componentă
+import InventoryDetails from './components/pages/InventoryDetails'; 
+import NewInventory from './components/pages/NewInventory';
+import EditInventory from './components/pages/EditInventory';
+import InventoryEditPage from './components/pages/InventoryEditPage';
 
 function App() {
   return (
@@ -29,8 +32,8 @@ function App() {
           <Route path="products/:id" element={<Product />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="inventory/new" element={<InventoryForm />} />
-          <Route path="inventory/edit/:id" element={<InventoryForm />} />
+          <Route path="inventory/new" element={<NewInventory />} />
+          <Route path="inventory/edit/:id" element={<InventoryEditPage />} />
           <Route path="inventory/:nume" element={<InventoryDetails />} /> {/* Noua rută pentru detalii inventar */}
           <Route path="*" element={<NoPage />} />
         </Route>
