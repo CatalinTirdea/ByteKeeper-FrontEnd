@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../../styles/login.css'; // Asigură-te că importi fișierul CSS
 import googleLogo from '../../resources/google-logo.png'; // Importă imaginea
+import { gapi } from 'gapi-script';
 
 const Login = () => {
-  const googleLogin = () => {
-    const clientId = '140352902475-5hgpbh9obko5f7fd5h51sebbo830olg4.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/oauth2/callback';
-    const scope = 'profile email';
-    const responseType = 'code';
+  useEffect(() => {
+    const initClient = () => {
+      gapi.client.init({
+        clientId: '140352902475-5hgpbh9obko5f7fd5h51sebbo830olg4.apps.googleusercontent.com',
+        scope: 'profile email'
+      });
+    };
+    gapi.load('client:auth2', initClient);
+  }, []);
 
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;
-    window.location.href = url;
+  const googleLogin = () => {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signIn().then(googleUser => {
+      const idToken = googleUser.getAuthResponse().id_token;
+      const profile = googleUser.getBasicProfile();
+      console.log('ID Token: ', idToken);
+      console.log('Name: ', profile.getName());
+      console.log('Email: ', profile.getEmail());
+
+      // Save the token and user info to localStorage or send them to your backend
+      localStorage.setItem('id_token', idToken);
+      localStorage.setItem('name', profile.getName());
+      localStorage.setItem('email', profile.getEmail());
+
+      // Redirect or do other actions
+    }).catch(error => {
+      console.error('Error during login: ', error);
+    });
   };
 
   return (

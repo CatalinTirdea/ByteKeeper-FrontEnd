@@ -18,6 +18,7 @@ import InventoryDetails from './components/pages/InventoryDetails';
 import NewInventory from './components/pages/NewInventory';
 import EditInventory from './components/pages/EditInventory';
 import InventoryEditPage from './components/pages/InventoryEditPage';
+import LoginCallback from './components/pages/LoginCallback';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="inventory/new" element={<NewInventory />} />
           <Route path="inventory/edit/:id" element={<InventoryEditPage />} />
+          <Route path="/oauth2/callback" element={<LoginCallback />} />
           <Route path="inventory/:nume" element={<InventoryDetails />} /> {/* Noua rută pentru detalii inventar */}
           <Route path="*" element={<NoPage />} />
         </Route>
