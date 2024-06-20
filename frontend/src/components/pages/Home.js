@@ -203,6 +203,7 @@ const handleDeleteInventory = async (id) => {
     try {
       const response = await fetch(`/api/inventories/edit/${selectedInventory.id}`, {
         method: 'PUT',
+        mode: "no-cors",
         headers: {
           'Content-Type': 'application/json'
         },
@@ -237,7 +238,6 @@ const handleDeleteInventory = async (id) => {
             {inventories.map(inventory => (
               <li key={inventory.id} className="inventory-item">
                 <span onClick={() => handleInventoryClick(inventory)} className='inventory-name'>{inventory.name}</span>
-                <button onClick={() => activateEditMode(inventory)}>Edit</button>
                 <button onClick={() => downloadFile(inventory.id)}>Download</button>
                 <button onClick={() => toggleChart(inventory.id)}>View Chart</button>
                 <button onClick={() => handleDeleteInventory(inventory.id)}>Delete</button>
