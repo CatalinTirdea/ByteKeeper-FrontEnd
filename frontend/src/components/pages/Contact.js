@@ -3,8 +3,8 @@ import '../../styles/contact.css'
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
-    message: ''
+    message: '',
+    email: ''
   });
 
   const [successMessage, setSuccessMessage] = useState('');
@@ -28,12 +28,12 @@ const Contact = () => {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-
-      const responseData = await response.json();
+      console.log(formData);
+      const responseData = await response;
       console.log(responseData); // pentru debug, poți afișa răspunsul serverului
 
       setSuccessMessage('Message sent successfully!');
-      setFormData({ name: '', email: '', message: '' }); // resetează formularul după trimitere
+      setFormData({ name: '',  message: '', mail: '' }); // resetează formularul după trimitere
     } catch (error) {
       console.error('Error sending message:', error);
     }

@@ -16,6 +16,7 @@ import InventoryDetails from './components/pages/InventoryDetails';
 import NewInventory from './components/pages/NewInventory';
 import InventoryEditPage from './components/pages/InventoryEditPage';
 import Login from './components/pages/Login';
+import Admin from './components/pages/Admin';
 function App() {
   return (
     <Router>
@@ -25,7 +26,7 @@ function App() {
           <Route path="signup" element={<SignUp />} />
          <Route path="login" element={<Login />} />
           <Route path="contact" element={<Contact />} />
-          
+          <Route path="admin" element={<Admin />} />
           <Route path="products/:id" element={<Product />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="contact" element={<Contact />} />

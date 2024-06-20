@@ -58,6 +58,7 @@ const Layout = () => {
         <ul>
           {userEmail ? (
             <>
+              {userEmail === '1337@vamdatown.com' && <li><Link to='/admin'>Admin Page</Link></li>}
               <li>{userEmail}</li>
               <li><button onClick={handleLogout}>Logout</button></li>
             </>
