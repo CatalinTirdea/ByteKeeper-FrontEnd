@@ -4,41 +4,36 @@ import { useParams, useNavigate } from 'react-router-dom';
 const Product = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [inventory, setInventory] = useState(null);
     const [product, setProduct] = useState(null);
     const [productName, setProductName] = useState('');
+    const [productQuantity, setProductQuantity] = useState(0);
     const [productPrice, setProductPrice] = useState(0);
+    const [categoryId, setCategoryId] = useState(null);
+    const [inventoryId, setInventoryId] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchInventory = async () => {
+        const fetchProduct = async () => {
             try {
-                const response = await fetch(`/api/inventories/`);
+                const response = await fetch(`/api/products/id/${id}`);
                 if (!response.ok) {
-                    throw new Error('Failed to fetch inventory');
+                    throw new Error('Failed to fetch product');
                 }
                 const data = await response.json();
-                // Găsim inventarul care conține produsul cu ID-ul specificat
-                const foundInventory = data.find(inventory => inventory.products.some(product => product.id === parseInt(id)));
-                if (!foundInventory) {
-                    throw new Error('Inventory not found for product');
-                }
-                setInventory(foundInventory);
-                // Găsim produsul în inventarul găsit
-                const foundProduct = foundInventory.products.find(product => product.id === parseInt(id));
-                if (!foundProduct) {
-                    throw new Error('Product not found');
-                }
-                setProduct(foundProduct);
-                setProductName(foundProduct.name);
-                setProductPrice(foundProduct.price);
-                setLoading(false); // Marcam încărcarea ca fiind completă
+                console.log(data);
+                setProduct(data);
+                setProductName(data.name);
+                setProductQuantity(data.quantity);
+                setProductPrice(data.price);
+                setCategoryId(data.category ? data.category.id : null);
+                setInventoryId(data.inventory ? data.inventory.id : null);
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching inventory or product', error);
+                console.error('Error fetching product', error);
             }
         };
 
-        fetchInventory();
+        fetchProduct();
     }, [id]);
 
     const handleDelete = async () => {
@@ -57,12 +52,19 @@ const Product = () => {
 
     const handleEdit = async () => {
         try {
+            console.log("name:"+ productName +  "quantity:"+ productQuantity + "price:"+ productPrice  + "categoryId:" + categoryId + "InventoryId" + inventoryId)
             const response = await fetch(`/api/products/edit/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: productName, price: productPrice }),
+                body: JSON.stringify({
+                    name: productName,
+                    quantity: productQuantity,
+                    price: productPrice,
+                    categoryId: categoryId,
+                    inventoryId: inventoryId,
+                }),
             });
             if (!response.ok) {
                 throw new Error('Failed to update product');
@@ -83,11 +85,18 @@ const Product = () => {
                 <div>
                     <h2>Edit Product</h2>
                     <div>
-                        <label>Name:</label>
+                        <label>Product Name:</label>
                         <input
                             type="text"
                             value={productName}
                             onChange={(e) => setProductName(e.target.value)}
+                        />
+                        <br />
+                        <label>Quantity:</label>
+                        <input
+                            type="number"
+                            value={productQuantity}
+                            onChange={(e) => setProductQuantity(parseInt(e.target.value))}
                         />
                         <br />
                         <label>Price:</label>

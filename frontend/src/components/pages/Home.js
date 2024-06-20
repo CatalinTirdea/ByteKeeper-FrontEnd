@@ -10,8 +10,8 @@ const Home = () => {
   const [newProduct, setNewProduct] = useState({
     name: '',
     quantity: '',
-    categoryId: '',  // Schimbat din category_id
-    inventoryId: '',  // Schimbat din inventory_id
+    categoryId: '',
+    inventoryId: '',
     price: ''
   });
   const [showProductForm, setShowProductForm] = useState(false);
@@ -74,7 +74,7 @@ const Home = () => {
     setSelectedInventory(inventory);
     setNewProduct(prevState => ({
       ...prevState,
-      inventoryId: inventory.id  // Schimbat din inventory_id
+      inventoryId: inventory.id
     }));
   };
 
@@ -88,7 +88,7 @@ const Home = () => {
 
   const handleProductSubmit = async (e) => {
     e.preventDefault();
-    console.log('newProduct:', newProduct);  // Adaugă această linie pentru a vedea datele trimise
+    console.log('newProduct:', newProduct); 
     try {
       const response = await fetch('/api/products/add', {
         method: 'POST',
@@ -102,8 +102,8 @@ const Home = () => {
         setNewProduct({
           name: '',
           quantity: '',
-          categoryId: '',  // Schimbat din category_id
-          inventoryId: selectedInventory.id,  // Schimbat din inventory_id
+          categoryId: '',
+          inventoryId: selectedInventory.id,
           price: ''
         });
         setShowProductForm(false);
@@ -126,7 +126,7 @@ const Home = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'inventory.json'); // Setează numele fișierului
+      link.setAttribute('download', 'inventory.json');
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -136,11 +136,21 @@ const Home = () => {
   };
 
   const generateChartData = (products) => {
-    const data = [['Product', 'Quantity']];
+    const data = [['Product', 'Total Price']];
     products.forEach(product => {
-      data.push([product.name, product.quantity]);
+      const totalPrice = product.price * product.quantity;
+      data.push([product.name, totalPrice]);
     });
     return data;
+  };
+  
+
+  const calculateTotalPrice = (products) => {
+    let totalPrice = 0;
+    products.forEach(product => {
+      totalPrice += product.price * product.quantity;
+    });
+    return totalPrice.toFixed(2); // Returnează suma totală cu două zecimale
   };
 
   const toggleChart = (inventoryId) => {
@@ -169,7 +179,7 @@ const Home = () => {
                   <Chart
                     chartType="PieChart"
                     data={generateChartData(inventory.products)}
-                    options={{ title: 'Product Distribution' }}
+                    options={{ title: 'Product Prices' }}
                     width="400px"
                     height="300px"
                   />
@@ -184,10 +194,11 @@ const Home = () => {
           {selectedInventory ? (
             <>
               <h1>{selectedInventory.name} Inventory</h1>
+              <p>Total Value: ${calculateTotalPrice(selectedInventory.products)}</p>
               <ul className="products-list">
                 {selectedInventory.products.map(product => (
                   <li key={product.id}>
-                    {product.name} - ${product.price}
+                    {product.name} - ${product.price} x {product.quantity} = ${(product.price * product.quantity).toFixed(2)}
                   </li>
                 ))}
               </ul>

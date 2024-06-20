@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
 import '../../styles/inventory.css';
 
-const Inventory = () => {
-    const [inventories, setInventories] = useState([]);
-    const [selectedInventory, setSelectedInventory] = useState(null);
+const InventoryDetails = () => {
+    const { nume } = useParams();
+    const [inventory, setInventory] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchInventories = async () => {
+        const fetchInventoryByName = async () => {
             try {
-                const response = await fetch('/api/inventories/');
+                const response = await fetch(`/api/inventories/search/${nume}`);
                 if (!response.ok) {
-                    throw new Error('Failed to fetch inventories');
+                    throw new Error('Failed to fetch inventory');
                 }
                 const data = await response.json();
-                setInventories(data);
+                if (data.length === 0) {
+                    throw new Error('Inventory not found');
+                }
+                setInventory(data[0]); // Luăm primul rezultat din căutare
             } catch (error) {
-                console.error('Error fetching inventories', error);
+                console.error('Error fetching inventory:', error);
+                setInventory(null);
             }
         };
 
-        fetchInventories();
-    }, []);
-
-    const handleSelectInventory = (inventory) => {
-        setSelectedInventory(inventory);
-    };
+        if (nume) {
+            fetchInventoryByName();
+        }
+    }, [nume]);
 
     const handleManageProduct = (productId) => {
         navigate(`/products/${productId}`);
@@ -35,26 +37,16 @@ const Inventory = () => {
 
     return (
         <div className="inventory-container">
-            <div className="inventory-list">
-                <h2>All Inventories</h2>
-                <List>
-                    {inventories.map(inventory => (
-                        <ListItem key={inventory.id} onClick={() => handleSelectInventory(inventory)} button>
-                            <ListItemText primary={inventory.name} />
-                        </ListItem>
-                    ))}
-                </List>
-            </div>
-            <div className="inventory-details">
-                {selectedInventory ? (
+            {inventory ? (
+                <div className="inventory-details">
                     <Card>
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                {selectedInventory.name}
+                                {inventory.name}
                             </Typography>
-                            {selectedInventory.products && selectedInventory.products.length > 0 ? (
+                            {inventory.products && inventory.products.length > 0 ? (
                                 <List>
-                                    {selectedInventory.products.map(product => (
+                                    {inventory.products.map(product => (
                                         <ListItem key={product.id}>
                                             <ListItemText primary={product.name} secondary={`Price: ${product.price}`} />
                                             <Button onClick={() => handleManageProduct(product.id)} variant="contained" color="primary">
@@ -66,14 +58,15 @@ const Inventory = () => {
                             ) : (
                                 <p>No products available</p>
                             )}
+                            {/* Poți adăuga alte detalii ale inventarului aici */}
                         </CardContent>
                     </Card>
-                ) : (
-                    <p>Select an inventory to view details.</p>
-                )}
-            </div>
+                </div>
+            ) : (
+                <p>Inventory not found</p>
+            )}
         </div>
     );
 };
 
-export default Inventory;
+export default InventoryDetails;
