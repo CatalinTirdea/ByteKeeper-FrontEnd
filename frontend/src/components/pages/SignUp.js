@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [mail, setEmail] = useState('');
     const [name, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -23,7 +25,7 @@ const Login = () => {
         };
 
         // URL-ul către backend pentru înregistrare
-        const url = 'http://localhost:8080/api/user/register'; // Înlocuiește cu adresa corectă a backend-ului tău
+        const url = '/api/users/register'; // Înlocuiește cu adresa corectă a backend-ului tău
 
         try {
             const response = await fetch(url, {
@@ -36,14 +38,18 @@ const Login = () => {
 
             // Verificarea statusului răspunsului de la server
             if (!response.ok) {
-                throw new Error('Eroare la înregistrare. Te rugăm să încerci din nou.');
+                throw new Error('Eroare la înregistrare. Status: ' + response.status);
             }
 
             // Răspunsul de la server
-            const data = await response.json();
+            const data = await response;
             console.log('Răspuns de la backend:', data);
 
-            // Aici poți gestiona răspunsul de la backend (redirecționare, mesaje de succes, etc.)
+            
+
+            // Redirecționează către pagina '/success' (sau oricare altă rută dorită)
+            navigate('/');
+
         } catch (error) {
             console.error('Eroare la comunicarea cu backend-ul:', error);
             setError('Eroare la înregistrare. Te rugăm să încerci din nou mai târziu.');

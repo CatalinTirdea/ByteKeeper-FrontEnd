@@ -22,10 +22,10 @@ const Login = () => {
         };
 
         // URL-ul către backend
-        const url = 'http://localhost:8080/api/users/login'; // Înlocuiește cu adresa corectă a backend-ului tău
+        // Înlocuiește cu adresa corectă a backend-ului tău
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch("/api/users/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const Login = () => {
             }
 
             // Răspunsul de la server
-            const data = await response.json();
+            const data = await response;
             console.log('Răspuns de la backend:', data);
 
             // Aici poți gestiona răspunsul de la backend (token de autentificare, redirecționare, etc.)
