@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-
+import '../../styles/layout.css';
 const Layout = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,26 +18,6 @@ const Layout = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    navigate('/login');
-  };
-
-  const renderLoginLogout = () => {
-    const accessToken = localStorage.getItem('access_token');
-    const idToken = localStorage.getItem('id_token');
-
-    if (accessToken && idToken) {
-      return (
-        <Link onClick={handleLogout}>Logout</Link>
-      );
-    } else {
-      return (
-        <Link to="/login">Login</Link>
-      );
-    }
-  };
 
   return (
     <>
@@ -45,7 +25,13 @@ const Layout = () => {
         <ul>
           <li className="logo"><Link to="/">ByteKeeper</Link></li>
           <li><Link to="/contact">Contact</Link></li>
-          <li>
+          
+          <li><Link to="/inventory">Inventory</Link></li>
+          <li><Link to="/download">Download</Link></li>
+          <li><Link to="/inventory/new">Add Inventory</Link></li>
+         
+          <li><Link to='/contact'>Contact</Link></li>
+          <li className='search-bar'>
             <input
               type="text"
               placeholder="Search inventory"
@@ -55,13 +41,10 @@ const Layout = () => {
             />
             <button onClick={handleSearch}>Search</button>
           </li>
-          <li><Link to="/inventory">Inventory</Link></li>
-          <li><Link to="/download">Download</Link></li>
-          <li><Link to="/inventory/new">Add Inventory</Link></li>
-          <li className="login-logout">
-            {renderLoginLogout()}
-          </li>
-          <li><Link to='/contact'>Contact</Link></li>
+        </ul>
+        <ul>
+        <li><Link to= '/signup'>SignUp</Link></li>
+         <li><Link to='/login'>Login</Link></li>
         </ul>
       </nav>
       <div className="container">

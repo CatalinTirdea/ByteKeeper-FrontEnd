@@ -55,3 +55,14 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-bar button {
+    width: 100px;
+}

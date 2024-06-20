@@ -10,24 +10,20 @@ import Contact from './components/pages/Contact';
 import Product from './components/pages/Product';
 import NoPage from './components/pages/NoPage';
 import Inventory from './components/pages/Inventory';
-import InventoryForm from './components/pages/InventoryForm';
-import Login from './components/pages/Login';
-import Callback from './components/pages/Callback';
+import SignUp from './components/pages/SignUp';
 import DownloadButton from './components/pages/DownloadButton';
 import InventoryDetails from './components/pages/InventoryDetails'; 
 import NewInventory from './components/pages/NewInventory';
-import EditInventory from './components/pages/EditInventory';
 import InventoryEditPage from './components/pages/InventoryEditPage';
-import LoginCallback from './components/pages/LoginCallback';
-
+import Login from './components/pages/Login';
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="callback" element={<Callback />} />
+          <Route path="signup" element={<SignUp />} />
+         <Route path="login" element={<Login />} />
           <Route path="contact" element={<Contact />} />
           <Route path="download" element={<DownloadButton />} />
           <Route path="products/:id" element={<Product />} />
@@ -35,7 +31,6 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="inventory/new" element={<NewInventory />} />
           <Route path="inventory/edit/:id" element={<InventoryEditPage />} />
-          <Route path="/oauth2/callback" element={<LoginCallback />} />
           <Route path="inventory/:nume" element={<InventoryDetails />} /> {/* Noua rută pentru detalii inventar */}
           <Route path="*" element={<NoPage />} />
         </Route>

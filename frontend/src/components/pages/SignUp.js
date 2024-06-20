@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import '../../styles/login.css'; // Fișierul CSS pentru stilizare
 
 const Login = () => {
-    const [mail, setMail] = useState('');
+    const [mail, setEmail] = useState('');
+    const [name, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Verificare dacă toate câmpurile sunt completate
-        if (!mail || !password) {
+        // Verificăm dacă toate câmpurile sunt completate
+        if (!mail || !name || !password) {
             setError('Toate câmpurile sunt obligatorii!');
             return;
         }
@@ -18,11 +18,12 @@ const Login = () => {
         // Obiectul cu datele pentru a fi trimis la backend
         const user = {
             mail: mail,
+            name: name,
             password: password
         };
 
-        // URL-ul către backend
-        const url = 'http://localhost:8080/api/users/login'; // Înlocuiește cu adresa corectă a backend-ului tău
+        // URL-ul către backend pentru înregistrare
+        const url = 'http://localhost:8080/api/user/register'; // Înlocuiește cu adresa corectă a backend-ului tău
 
         try {
             const response = await fetch(url, {
@@ -35,35 +36,44 @@ const Login = () => {
 
             // Verificarea statusului răspunsului de la server
             if (!response.ok) {
-                throw new Error('Eroare la autentificare. Te rugăm să încerci din nou.');
+                throw new Error('Eroare la înregistrare. Te rugăm să încerci din nou.');
             }
 
             // Răspunsul de la server
             const data = await response.json();
             console.log('Răspuns de la backend:', data);
 
-            // Aici poți gestiona răspunsul de la backend (token de autentificare, redirecționare, etc.)
+            // Aici poți gestiona răspunsul de la backend (redirecționare, mesaje de succes, etc.)
         } catch (error) {
             console.error('Eroare la comunicarea cu backend-ul:', error);
-            setError('Eroare la autentificare. Te rugăm să încerci din nou mai târziu.');
+            setError('Eroare la înregistrare. Te rugăm să încerci din nou mai târziu.');
         }
     };
 
     return (
-        <div className="login-container">
-            <h2>Log In</h2>
-            {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleSubmit} className="login-form">
-                <div className="form-group">
+        <div>
+            <h2>Sign Up</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={handleSubmit}>
+                <div>
                     <label>Email:</label>
                     <input
                         type="email"
                         value={mail}
-                        onChange={(e) => setMail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
-                <div className="form-group">
+                <div>
+                    <label>Name:</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
                     <label>Password:</label>
                     <input
                         type="password"
@@ -72,7 +82,7 @@ const Login = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="submit-button">Log In</button>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
     );
